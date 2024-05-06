@@ -5,6 +5,7 @@ import { UserDispatchContext } from "../../context/userProvider.jsx";
 import { getMediaFile, formatDateFromString } from "../../../utilities/utili";
 import Header from "../../header/index.jsx";
 import { useLocation } from "react-router-dom";
+import { setMetaTag, setLinkTag } from '../../../utilities/meta.js';
 
 const Product = ({ product_categories_json }) => {
   const navigate = useNavigate();
@@ -99,6 +100,33 @@ const Product = ({ product_categories_json }) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
     setIsAdding(false);
   };
+
+  useEffect(() => {
+    // Set the page title
+
+    if (singleProductData) {
+      document.title = singleProductData[0].product;
+
+      // Set the page description
+      setMetaTag('meta[name="description"]', 'content', singleProductData[0].description);
+
+      // Set the canonical URL
+      setLinkTag('link[rel="canonical"]', 'href', `${window.location}`);
+
+      // Set the robots meta tag
+      setMetaTag('meta[name="robots"]', 'content', 'index, follow');
+
+      // Set the Open Graph meta tags
+      setMetaTag('meta[property="og:title"]', 'content', singleProductData[0].product);
+      setMetaTag('meta[property="og:description"]', 'content', singleProductData[0].description);
+      setMetaTag('meta[property="og:image"]', 'content', '/assets/Mark.png');
+
+      // Set the Twitter meta tags
+      setMetaTag('meta[name="twitter:title"]', 'content', singleProductData[0].product);
+      setMetaTag('meta[name="twitter:description"]', 'content', singleProductData[0].description);
+      setMetaTag('meta[name="twitter:image"]', 'content', '/assets/Mark.png');
+    }
+  }, [singleProductData]);
 
   return (
     <div>
